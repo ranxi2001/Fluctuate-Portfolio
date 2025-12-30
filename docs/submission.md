@@ -162,11 +162,11 @@ https://docs.google.com/presentation/...
 
 ### 5. 智能合约信息 📝
 
-**Mantle Testnet**：
+**Mantle Testnet (Sepolia)**：
 ```
-合约地址: 0x...
-部署交易: 0x...
-验证链接: https://explorer.testnet.mantle.xyz/address/0x...
+合约地址: 0xa37CD611Ff745548926b7ed121Ba825A61226149
+部署交易: 0xc81f5ad3df72c8d576b3f78b1229eb588354cca22b2484e89e65cd2646b2e7b2
+验证链接: https://sepolia.mantlescan.xyz/address/0xa37CD611Ff745548926b7ed121Ba825A61226149
 ```
 
 **Mantle Mainnet**：

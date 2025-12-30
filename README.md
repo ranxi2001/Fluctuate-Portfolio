@@ -63,8 +63,9 @@
 
 ### 智能合约
 - **语言**：Solidity ^0.8.20
-- **工具**：Hardhat
+- **工具**：Foundry (Forge + Cast + Anvil)
 - **网络**：Mantle Testnet / Mainnet
+- **测试**：Solidity 原生测试 + Fuzz Testing
 
 ### 核心技术
 - **预言机**：Chainlink Price Feeds
@@ -114,13 +115,21 @@ npm run dev
 ### 部署智能合约
 
 ```bash
-cd contracts
-npm install
-npx hardhat compile
-npx hardhat run scripts/deploy.js --network mantleTestnet
+cd foundry
+
+# 构建合约
+forge build
+
+# 运行测试
+forge test -vv
+
+# 部署到 Mantle 测试网
+forge script script/Deploy.s.sol:DeployFluctuatePortfolio \
+    --rpc-url https://rpc.sepolia.mantle.xyz \
+    --broadcast
 ```
 
-> 📚 查看 [部署指南](./docs/deployment.md)
+> 📚 查看 [详细部署指南](./docs/deployment.md)
 
 ---
 
@@ -133,9 +142,14 @@ fluctuate-portfolio/
 │   ├── hooks/               # 自定义 Hooks
 │   ├── utils/               # 工具函数
 │   └── App.tsx              # 主应用
-├── contracts/               # 智能合约
-│   ├── FluctuatePortfolio.sol
-│   └── scripts/             # 部署脚本
+├── foundry/                 # 智能合约 (Foundry)
+│   ├── src/                 # 合约源码
+│   │   └── FluctuatePortfolio.sol
+│   ├── test/                # Solidity 测试
+│   │   └── FluctuatePortfolio.t.sol
+│   ├── script/              # 部署脚本
+│   │   └── Deploy.s.sol
+│   └── foundry.toml         # Foundry 配置
 ├── docs/                    # 项目文档
 │   ├── features.md          # 功能说明
 │   ├── architecture.md      # 技术架构

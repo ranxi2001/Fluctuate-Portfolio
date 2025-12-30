@@ -1,0 +1,30 @@
+# node_modules
+node_modules
+
+# build
+build
+
+# cache
+.cache
+
+# editor
+.idea
+.vscode
+
+# logs
+logs
+
+# temporary files
+tmp
+
+# dependencies
+dependencies
+
+# environment variables
+.env
+
+# hardhat
+hardhat
+
+# wallet
+wallet

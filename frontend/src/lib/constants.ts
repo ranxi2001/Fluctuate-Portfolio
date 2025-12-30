@@ -35,8 +35,8 @@ export const MANTLE_MAINNET = {
   testnet: false,
 } as const
 
-// Contract Address - Update this after deployment
-export const CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000' as const
+// Contract Address - Deployed on Mantle Sepolia Testnet
+export const CONTRACT_ADDRESS = '0xa37CD611Ff745548926b7ed121Ba825A61226149' as const
 
 // Chainlink Price Feed Addresses on Mantle (placeholder - update with actual addresses)
 export const CHAINLINK_FEEDS = {

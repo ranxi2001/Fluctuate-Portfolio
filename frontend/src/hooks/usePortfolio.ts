@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useLocalStorage } from './useLocalStorage'
 import type { Asset, AssetWithPrice } from '@/types/asset'
@@ -20,6 +20,34 @@ export function usePortfolio() {
 
   const [history, setHistory] = useLocalStorage<PortfolioSnapshot[]>(historyKey, [])
   const [prices, setPrices] = useState<Record<string, number>>({})
+
+  const fetchPrices = useCallback(async () => {
+    try {
+      // Use CryptoCompare as fallback (Symbols: BTC, ETH, MNT, XAU)
+      const symbols = ['BTC', 'ETH', 'MNT', 'XAU'].join(',')
+      const response = await fetch(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${symbols}&tsyms=USD`)
+      const data = await response.json()
+
+      const newPrices: Record<string, number> = {}
+      // CryptoCompare format: { BTC: { USD: 123 }, ETH: { USD: 456 } }
+      Object.entries(data).forEach(([symbol, rates]: [string, any]) => {
+        if (rates.USD) {
+          newPrices[symbol] = rates.USD
+        }
+      })
+
+      setPrices(prev => ({ ...prev, ...newPrices }))
+    } catch (error) {
+      console.warn('Failed to fetch prices (network issue):', error)
+    }
+  }, [])
+
+  // Initial fetch and interval
+  useEffect(() => {
+    fetchPrices()
+    const interval = setInterval(fetchPrices, 60000) // Update every minute
+    return () => clearInterval(interval)
+  }, [fetchPrices])
 
   const updatePrices = useCallback((newPrices: Record<string, number>) => {
     setPrices(prev => ({ ...prev, ...newPrices }))
@@ -137,6 +165,13 @@ export function usePortfolio() {
     })
   }, [setPortfolio])
 
+  const setAssets = useCallback((newAssets: Asset[]) => {
+    setPortfolio({
+      assets: newAssets,
+      lastUpdated: Date.now(),
+    })
+  }, [setPortfolio])
+
   const getCategoryInfo = useCallback((category: string) => {
     return ASSET_CATEGORIES[category as keyof typeof ASSET_CATEGORIES] || ASSET_CATEGORIES.custom
   }, [])
@@ -149,6 +184,7 @@ export function usePortfolio() {
     prices,
     updatePrices,
     addAsset,
+    setAssets, // Export new method
     updateAsset,
     removeAsset,
     saveSnapshot,

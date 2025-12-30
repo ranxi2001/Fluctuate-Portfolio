@@ -34,7 +34,8 @@ export function useContractPortfolio() {
   const { data, isLoading, error, refetch } = useReadContract({
     address: CONTRACT_ADDRESS,
     abi: FLUCTUATE_PORTFOLIO_ABI,
-    functionName: 'getMyPortfolio',
+    functionName: 'getPortfolio',
+    args: address ? [address] : undefined,
     chainId: mantleTestnet.id,
     query: {
       enabled: !!address,
@@ -59,9 +60,16 @@ export function useContractPortfolio() {
 export function useSaveToChain() {
   const { writeContract, data: hash, isPending, error } = useWriteContract()
 
-  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+  const { isLoading: isConfirming, isSuccess, data: receipt } = useWaitForTransactionReceipt({
     hash,
   })
+
+  // Explicitly check for successful transaction status
+  const isMined = isSuccess && receipt?.status === 'success'
+
+  if (hash) {
+    console.log('Transaction Hash:', hash)
+  }
 
   const saveToChain = async (assets: Asset[]) => {
     if (assets.length === 0) {
@@ -69,6 +77,8 @@ export function useSaveToChain() {
     }
 
     const contractAssets = assets.map(toContractAsset)
+    console.log('Using contract address:', CONTRACT_ADDRESS)
+    console.log('Saving assets to chain:', contractAssets)
 
     writeContract({
       address: CONTRACT_ADDRESS,
@@ -84,7 +94,8 @@ export function useSaveToChain() {
     hash,
     isPending,
     isConfirming,
-    isSuccess,
+    isSuccess: isMined, // Override with actual status check
+    receipt, // Expose receipt for debugging
     error,
   }
 }

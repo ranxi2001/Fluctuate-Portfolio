@@ -11,12 +11,14 @@ import type { AssetWithPrice, AssetCategory } from '@/types/asset'
 
 export function AssetList() {
   const { isConnected } = useAccount()
-  const { assets, addAsset, updateAsset, removeAsset, getCategoryInfo } = usePortfolio()
+  const { assets, addAsset, updateAsset, removeAsset, getCategoryInfo, setAssets } = usePortfolio()
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [editingAsset, setEditingAsset] = useState<AssetWithPrice | null>(null)
+  const [isLoadingFromChain, setIsLoadingFromChain] = useState(false)
+  const [loadMessage, setLoadMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null)
 
-  const { saveToChain, isPending, isConfirming, isSuccess, error } = useSaveToChain()
-  const { assets: chainAssets, refetch: refetchChain } = useContractPortfolio()
+  const { saveToChain, isPending, isConfirming, isSuccess, error, receipt } = useSaveToChain()
+  const { refetch: refetchChain, isLoading: isChainLoading } = useContractPortfolio()
 
   const handleAdd = (asset: {
     symbol: string
@@ -49,17 +51,47 @@ export function AssetList() {
   }
 
   const handleLoadFromChain = async () => {
-    await refetchChain()
-    if (chainAssets.length > 0) {
-      chainAssets.forEach((asset) => {
-        addAsset({
-          symbol: asset.symbol,
-          name: asset.name,
-          amount: asset.amount,
-          buyPrice: asset.buyPrice,
-          category: asset.category,
-        })
-      })
+    setIsLoadingFromChain(true)
+    setLoadMessage(null)
+    try {
+      const result = await refetchChain()
+      console.log('Refetch result:', result)
+      console.log('Result data:', result.data)
+
+      // The contract returns [assets[], lastUpdated] tuple
+      // result.data is already this tuple
+      const rawData = result.data as readonly [
+        readonly { symbol: string; amount: bigint; buyPrice: bigint }[],
+        bigint
+      ] | undefined
+
+      const loadedAssets = rawData?.[0]
+      console.log('Loaded assets:', loadedAssets)
+
+      if (loadedAssets && loadedAssets.length > 0) {
+        // Bulk convert assets
+        const newAssets = loadedAssets.map((contractAsset) => ({
+          symbol: contractAsset.symbol,
+          name: contractAsset.symbol,
+          amount: Number(contractAsset.amount) / 1e18,
+          buyPrice: Number(contractAsset.buyPrice) > 0 ? Number(contractAsset.buyPrice) / 1e18 : undefined,
+          category: 'custom' as const,
+          addedAt: Date.now(),
+          id: `${contractAsset.symbol}_${Date.now()}_${Math.random().toString(36).substring(7)}` // Add randomness to prevent ID collision in bulk add
+        }))
+
+        // Atomic update of all assets
+        setAssets(newAssets)
+
+        setLoadMessage({ type: 'success', text: `Loaded ${loadedAssets.length} assets from blockchain!` })
+      } else {
+        setLoadMessage({ type: 'info', text: 'No portfolio found on chain. Save your assets first!' })
+      }
+    } catch (err) {
+      console.error('Failed to load from chain:', err)
+      setLoadMessage({ type: 'error', text: 'Failed to load from chain. Make sure you are connected to Mantle Sepolia.' })
+    } finally {
+      setIsLoadingFromChain(false)
     }
   }
 
@@ -97,9 +129,14 @@ export function AssetList() {
           <Button
             variant="outline"
             onClick={handleLoadFromChain}
+            disabled={isLoadingFromChain}
           >
-            <Download className="h-4 w-4 mr-2" />
-            Load from Chain
+            {isLoadingFromChain ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4 mr-2" />
+            )}
+            {isLoadingFromChain ? 'Loading...' : 'Load from Chain'}
           </Button>
           <Button onClick={() => setIsAddModalOpen(true)}>
             <Plus className="h-4 w-4 mr-2" />
@@ -108,15 +145,25 @@ export function AssetList() {
         </div>
       </div>
 
+      {loadMessage && (
+        <div className={`mb-4 p-3 rounded-lg text-sm ${loadMessage.type === 'success' ? 'bg-success/10 text-success' :
+          loadMessage.type === 'error' ? 'bg-error/10 text-error' :
+            'bg-blue-500/10 text-blue-600'
+          }`}>
+          {loadMessage.text}
+        </div>
+      )}
+
       {isSuccess && (
         <div className="mb-4 p-3 bg-success/10 text-success rounded-lg text-sm">
           Portfolio saved to blockchain successfully!
         </div>
       )}
 
-      {error && (
+      {/* Show error if transaction failed or reverted */}
+      {(error || (receipt?.status === 'reverted')) && (
         <div className="mb-4 p-3 bg-error/10 text-error rounded-lg text-sm">
-          Error: {error.message}
+          {error?.message || 'Transaction reverted on chain. Please check your wallet for details or ensure you have enough gas.'}
         </div>
       )}
 

@@ -20,6 +20,8 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       setStoredValue(valueToStore)
       if (typeof window !== 'undefined') {
         window.localStorage.setItem(key, JSON.stringify(valueToStore))
+        // Dispatch a custom event to sync across hooks in the same window
+        window.dispatchEvent(new Event('local-storage'))
       }
     } catch (error) {
       console.error(`Error setting localStorage key "${key}":`, error)
@@ -30,6 +32,8 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
     try {
       if (typeof window !== 'undefined') {
         window.localStorage.removeItem(key)
+        // Dispatch a custom event to sync across hooks in the same window
+        window.dispatchEvent(new Event('local-storage'))
       }
       setStoredValue(initialValue)
     } catch (error) {
@@ -38,19 +42,30 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
   }, [key, initialValue])
 
   useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === key && e.newValue) {
+    const handleStorageChange = () => {
+      if (typeof window !== 'undefined') {
         try {
-          setStoredValue(JSON.parse(e.newValue))
+          const item = window.localStorage.getItem(key)
+          if (item) {
+            setStoredValue(JSON.parse(item))
+          } else {
+            setStoredValue(initialValue)
+          }
         } catch (error) {
           console.error(`Error parsing storage change for key "${key}":`, error)
         }
       }
     }
 
+    // Listen for both cross-tab (storage) and same-tab (local-storage) events
     window.addEventListener('storage', handleStorageChange)
-    return () => window.removeEventListener('storage', handleStorageChange)
-  }, [key])
+    window.addEventListener('local-storage', handleStorageChange)
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('local-storage', handleStorageChange)
+    }
+  }, [key, initialValue])
 
   return [storedValue, setValue, removeValue] as const
 }

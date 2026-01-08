@@ -47,10 +47,10 @@ export const CHAINLINK_FEEDS = {
 
 // Supported Assets Configuration with icon URLs
 export const SUPPORTED_ASSETS = [
-  { symbol: 'BTC', name: 'Bitcoin', category: 'crypto', decimals: 8, hasPriceFeed: true, icon: 'https://cryptoicons.org/api/icon/btc/96' },
-  { symbol: 'ETH', name: 'Ethereum', category: 'crypto', decimals: 18, hasPriceFeed: true, icon: 'https://cryptoicons.org/api/icon/eth/96' },
-  { symbol: 'USDT', name: 'Tether USD', category: 'stablecoin', decimals: 6, hasPriceFeed: false, fixedPrice: 1, icon: 'https://cryptoicons.org/api/icon/usdt/96' },
-  { symbol: 'USDC', name: 'USD Coin', category: 'stablecoin', decimals: 6, hasPriceFeed: false, fixedPrice: 1, icon: 'https://cryptoicons.org/api/icon/usdc/96' },
+  { symbol: 'BTC', name: 'Bitcoin', category: 'crypto', decimals: 8, hasPriceFeed: true, icon: '/icons/btc.png' },
+  { symbol: 'ETH', name: 'Ethereum', category: 'crypto', decimals: 18, hasPriceFeed: true, icon: '/icons/eth.png' },
+  { symbol: 'USDT', name: 'Tether USD', category: 'stablecoin', decimals: 6, hasPriceFeed: false, fixedPrice: 1, icon: '/icons/usdt.png' },
+  { symbol: 'USDC', name: 'USD Coin', category: 'stablecoin', decimals: 6, hasPriceFeed: false, fixedPrice: 1, icon: '/icons/usdc.png' },
   { symbol: 'XAU', name: 'Gold', category: 'rwa', decimals: 8, hasPriceFeed: true, icon: 'https://img.icons8.com/color/96/gold-bars.png' },
   { symbol: 'USD', name: 'US Dollar', category: 'fiat', decimals: 2, hasPriceFeed: false, fixedPrice: 1, icon: 'https://img.icons8.com/color/96/us-dollar-circled.png' },
   { symbol: 'CNY', name: 'Chinese Yuan', category: 'fiat', decimals: 2, hasPriceFeed: false, fixedPrice: 0.14, icon: 'https://img.icons8.com/color/96/yuan.png' },

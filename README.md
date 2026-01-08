@@ -7,7 +7,7 @@
 一个去中心化的个人资产管理网页应用，用户通过钱包连接即可管理比特币、黄金、外汇等多种波动资产  
 实时估值、历史净值曲线查看，完全无需注册账号
 
-[演示 Demo](https://your-project.vercel.app) | [技术文档](./docs) | [视频介绍](#)
+[演示 Demo](https://fluctuate-portfolio.vercel.app) | [技术文档](./docs) | [视频介绍](#)
 
 </div>
 
@@ -164,13 +164,14 @@ fluctuate-portfolio/
 ## 🎬 演示
 
 ### 在线 Demo
-🔗 [https://fluctuate-portfolio.vercel.app](https://your-project.vercel.app)
+🔗 [https://fluctuate-portfolio.vercel.app](https://fluctuate-portfolio.vercel.app)
 
 ### 视频介绍
 🎥 [观看演示视频](#) (3分钟)
 
 ### 功能截图
-> Coming soon...
+
+![Portfolio Demo](./docs/portfolio-demo.png)
 
 ---
 

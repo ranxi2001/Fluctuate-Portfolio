@@ -45,15 +45,15 @@ export const CHAINLINK_FEEDS = {
   'XAU/USD': '0x0000000000000000000000000000000000000000',
 } as const
 
-// Supported Assets Configuration
+// Supported Assets Configuration with icon URLs
 export const SUPPORTED_ASSETS = [
-  { symbol: 'BTC', name: 'Bitcoin', category: 'crypto', decimals: 8, hasPriceFeed: true },
-  { symbol: 'ETH', name: 'Ethereum', category: 'crypto', decimals: 18, hasPriceFeed: true },
-  { symbol: 'USDT', name: 'Tether USD', category: 'stablecoin', decimals: 6, hasPriceFeed: false, fixedPrice: 1 },
-  { symbol: 'USDC', name: 'USD Coin', category: 'stablecoin', decimals: 6, hasPriceFeed: false, fixedPrice: 1 },
-  { symbol: 'XAU', name: 'Gold', category: 'rwa', decimals: 8, hasPriceFeed: true },
-  { symbol: 'USD', name: 'US Dollar', category: 'fiat', decimals: 2, hasPriceFeed: false, fixedPrice: 1 },
-  { symbol: 'CNY', name: 'Chinese Yuan', category: 'fiat', decimals: 2, hasPriceFeed: false, fixedPrice: 0.14 },
+  { symbol: 'BTC', name: 'Bitcoin', category: 'crypto', decimals: 8, hasPriceFeed: true, icon: 'https://assets.coingecko.com/coins/images/1/small/bitcoin.png' },
+  { symbol: 'ETH', name: 'Ethereum', category: 'crypto', decimals: 18, hasPriceFeed: true, icon: 'https://assets.coingecko.com/coins/images/279/small/ethereum.png' },
+  { symbol: 'USDT', name: 'Tether USD', category: 'stablecoin', decimals: 6, hasPriceFeed: false, fixedPrice: 1, icon: 'https://assets.coingecko.com/coins/images/325/small/Tether.png' },
+  { symbol: 'USDC', name: 'USD Coin', category: 'stablecoin', decimals: 6, hasPriceFeed: false, fixedPrice: 1, icon: 'https://assets.coingecko.com/coins/images/6319/small/usdc.png' },
+  { symbol: 'XAU', name: 'Gold', category: 'rwa', decimals: 8, hasPriceFeed: true, icon: 'https://img.icons8.com/color/96/gold-bars.png' },
+  { symbol: 'USD', name: 'US Dollar', category: 'fiat', decimals: 2, hasPriceFeed: false, fixedPrice: 1, icon: 'https://img.icons8.com/color/96/us-dollar-circled.png' },
+  { symbol: 'CNY', name: 'Chinese Yuan', category: 'fiat', decimals: 2, hasPriceFeed: false, fixedPrice: 0.14, icon: 'https://img.icons8.com/color/96/yuan.png' },
 ] as const
 
 // Asset Categories

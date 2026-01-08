@@ -2,6 +2,7 @@ import { Edit2, Trash2, TrendingUp, TrendingDown } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { formatUSD, formatNumber, formatPercentage } from '@/lib/utils'
+import { SUPPORTED_ASSETS } from '@/lib/constants'
 import type { AssetWithPrice } from '@/types/asset'
 
 interface AssetCardProps {
@@ -14,13 +15,30 @@ interface AssetCardProps {
 export function AssetCard({ asset, onEdit, onDelete, categoryColor }: AssetCardProps) {
   const hasProfitLoss = asset.profitLoss !== undefined
 
+  // Find icon for preset assets
+  const assetConfig = SUPPORTED_ASSETS.find(a => a.symbol === asset.symbol)
+  const iconUrl = assetConfig?.icon
+
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
+            {iconUrl ? (
+              <img
+                src={iconUrl}
+                alt={asset.symbol}
+                className="w-10 h-10 rounded-full object-cover"
+                onError={(e) => {
+                  // Fallback to initials on image load error
+                  const target = e.target as HTMLImageElement
+                  target.style.display = 'none'
+                  target.nextElementSibling?.classList.remove('hidden')
+                }}
+              />
+            ) : null}
             <div
-              className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm"
+              className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm ${iconUrl ? 'hidden' : ''}`}
               style={{ backgroundColor: categoryColor }}
             >
               {asset.symbol.slice(0, 2)}
@@ -57,9 +75,8 @@ export function AssetCard({ asset, onEdit, onDelete, categoryColor }: AssetCardP
           {hasProfitLoss && (
             <div>
               <p className="text-xs text-muted-foreground">P/L</p>
-              <div className={`flex items-center gap-1 ${
-                asset.profitLoss! >= 0 ? 'text-success' : 'text-error'
-              }`}>
+              <div className={`flex items-center gap-1 ${asset.profitLoss! >= 0 ? 'text-success' : 'text-error'
+                }`}>
                 {asset.profitLoss! >= 0 ? (
                   <TrendingUp className="h-4 w-4" />
                 ) : (

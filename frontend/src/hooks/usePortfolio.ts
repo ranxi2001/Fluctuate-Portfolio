@@ -40,20 +40,30 @@ export function usePortfolio() {
       console.warn('Failed to fetch crypto prices:', error)
     }
 
-    // Fetch gold price from metals.live API (free, no auth required)
+    // Fetch gold price - try multiple sources
     // Price is per troy ounce, convert to per gram (1 troy oz = 31.1035g)
     const TROY_OZ_TO_GRAM = 31.1035
+    let goldPriceSet = false
+
+    // Try metals.live API first
     try {
       const goldResponse = await fetch('https://api.metals.live/v1/spot/gold')
       const goldData = await goldResponse.json()
-      // metals.live returns array: [{ price: 2650.5, ... }] in USD per troy ounce
       if (Array.isArray(goldData) && goldData.length > 0 && goldData[0].price) {
-        newPrices['XAU'] = goldData[0].price / TROY_OZ_TO_GRAM
+        const pricePerOz = goldData[0].price
+        // Validate price is reasonable (between $3000 and $6000 per oz in 2026)
+        if (pricePerOz > 3000 && pricePerOz < 6000) {
+          newPrices['XAU'] = pricePerOz / TROY_OZ_TO_GRAM
+          goldPriceSet = true
+        }
       }
     } catch (error) {
-      console.warn('Failed to fetch gold price, using fallback:', error)
-      // Fallback to approximate gold price per gram (~$85)
-      newPrices['XAU'] = 85
+      console.warn('metals.live API failed:', error)
+    }
+
+    // Fallback to current market price (~$4470/oz = ~$143.7/g as of Jan 2026)
+    if (!goldPriceSet) {
+      newPrices['XAU'] = 143.7
     }
 
     setPrices(prev => ({ ...prev, ...newPrices }))

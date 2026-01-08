@@ -7,7 +7,7 @@
 一个去中心化的个人资产管理网页应用，用户通过钱包连接即可管理比特币、黄金、外汇等多种波动资产  
 实时估值、历史净值曲线查看，完全无需注册账号
 
-[演示 Demo](https://fluctuate-portfolio.vercel.app) | [技术文档](./docs) | [视频介绍](#)
+[演示 Demo](https://fluctuate-portfolio.vercel.app) | [技术文档](./docs) | [视频介绍](https://www.bilibili.com/video/BV1NpiRBXEsy)
 
 </div>
 
@@ -167,7 +167,7 @@ fluctuate-portfolio/
 🔗 [https://fluctuate-portfolio.vercel.app](https://fluctuate-portfolio.vercel.app)
 
 ### 视频介绍
-🎥 [观看演示视频](./docs/demo-video.mp4)
+🎥 [观看演示视频](https://www.bilibili.com/video/BV1NpiRBXEsy)
 
 ### 功能截图
 
@@ -210,7 +210,8 @@ fluctuate-portfolio/
 
 ## 📧 联系方式
 
-- GitHub: [@yourusername](https://github.com/ranxi2001)
+- GitHub: [@ranxi2001](https://github.com/ranxi2001)
+- Twitter: [@Onefly](https://x.com/Onefly)
 - Email: ranxi169@gmail.com
 
 ---
@@ -223,8 +224,8 @@ MIT License
 
 <div align="center">
 
-**Built for Mantle Global Hackathon 2025** 🚀
+**Built for HackQuest Hackathon** 🚀
 
-Made with ❤️ using Mantle + Chainlink
+Powered by Mantle Network and Chainlink
 
 </div>

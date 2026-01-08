@@ -18,7 +18,7 @@ export function AssetList() {
   const [loadMessage, setLoadMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null)
 
   const { saveToChain, isPending, isConfirming, isSuccess, error, receipt } = useSaveToChain()
-  const { refetch: refetchChain, isLoading: isChainLoading } = useContractPortfolio()
+  const { refetch: refetchChain } = useContractPortfolio()
 
   const handleAdd = (asset: {
     symbol: string

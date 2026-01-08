@@ -167,7 +167,7 @@ fluctuate-portfolio/
 🔗 [https://fluctuate-portfolio.vercel.app](https://fluctuate-portfolio.vercel.app)
 
 ### 视频介绍
-🎥 [观看演示视频](#) (3分钟)
+🎥 [观看演示视频](./docs/demo-video.mp4)
 
 ### 功能截图
 

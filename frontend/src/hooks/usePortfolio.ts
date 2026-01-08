@@ -41,17 +41,19 @@ export function usePortfolio() {
     }
 
     // Fetch gold price from metals.live API (free, no auth required)
+    // Price is per troy ounce, convert to per gram (1 troy oz = 31.1035g)
+    const TROY_OZ_TO_GRAM = 31.1035
     try {
       const goldResponse = await fetch('https://api.metals.live/v1/spot/gold')
       const goldData = await goldResponse.json()
-      // metals.live returns array: [{ price: 2650.5, ... }]
+      // metals.live returns array: [{ price: 2650.5, ... }] in USD per troy ounce
       if (Array.isArray(goldData) && goldData.length > 0 && goldData[0].price) {
-        newPrices['XAU'] = goldData[0].price
+        newPrices['XAU'] = goldData[0].price / TROY_OZ_TO_GRAM
       }
     } catch (error) {
       console.warn('Failed to fetch gold price, using fallback:', error)
-      // Fallback to approximate gold price per troy ounce
-      newPrices['XAU'] = 2650
+      // Fallback to approximate gold price per gram (~$85)
+      newPrices['XAU'] = 85
     }
 
     setPrices(prev => ({ ...prev, ...newPrices }))

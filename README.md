@@ -210,8 +210,8 @@ fluctuate-portfolio/
 
 ## 📧 联系方式
 
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
+- GitHub: [@yourusername](https://github.com/ranxi2001)
+- Email: ranxi169@gmail.com
 
 ---
 

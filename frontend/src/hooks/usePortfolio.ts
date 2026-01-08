@@ -22,24 +22,39 @@ export function usePortfolio() {
   const [prices, setPrices] = useState<Record<string, number>>({})
 
   const fetchPrices = useCallback(async () => {
+    const newPrices: Record<string, number> = {}
+
+    // Fetch crypto prices from CryptoCompare
     try {
-      // Use CryptoCompare as fallback (Symbols: BTC, ETH, MNT, XAU)
-      const symbols = ['BTC', 'ETH', 'MNT', 'XAU'].join(',')
-      const response = await fetch(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${symbols}&tsyms=USD`)
+      const cryptoSymbols = ['BTC', 'ETH', 'MNT'].join(',')
+      const response = await fetch(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${cryptoSymbols}&tsyms=USD`)
       const data = await response.json()
 
-      const newPrices: Record<string, number> = {}
       // CryptoCompare format: { BTC: { USD: 123 }, ETH: { USD: 456 } }
       Object.entries(data).forEach(([symbol, rates]: [string, any]) => {
         if (rates.USD) {
           newPrices[symbol] = rates.USD
         }
       })
-
-      setPrices(prev => ({ ...prev, ...newPrices }))
     } catch (error) {
-      console.warn('Failed to fetch prices (network issue):', error)
+      console.warn('Failed to fetch crypto prices:', error)
     }
+
+    // Fetch gold price from metals.live API (free, no auth required)
+    try {
+      const goldResponse = await fetch('https://api.metals.live/v1/spot/gold')
+      const goldData = await goldResponse.json()
+      // metals.live returns array: [{ price: 2650.5, ... }]
+      if (Array.isArray(goldData) && goldData.length > 0 && goldData[0].price) {
+        newPrices['XAU'] = goldData[0].price
+      }
+    } catch (error) {
+      console.warn('Failed to fetch gold price, using fallback:', error)
+      // Fallback to approximate gold price per troy ounce
+      newPrices['XAU'] = 2650
+    }
+
+    setPrices(prev => ({ ...prev, ...newPrices }))
   }, [])
 
   // Initial fetch and interval

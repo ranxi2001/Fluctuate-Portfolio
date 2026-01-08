@@ -44,3 +44,4 @@ Thumbs.db
 # Wallet / Private Keys
 wallet/
 *.key
+foundry
